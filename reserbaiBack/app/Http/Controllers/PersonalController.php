@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PersonalController extends Controller
 {
-    public function citasAsignadas()
+    public function index()
     {
         $citas = Cita::where('personal_id', Auth::id())->get();
         return response()->json($citas);

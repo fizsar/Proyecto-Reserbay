@@ -1,5 +1,3 @@
-// app/Http/Controllers/ClienteController.php
-
 <?php
 
 namespace App\Http\Controllers;
@@ -11,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ClienteController extends Controller
 {
-    public function perfil()
+    public function index()
     {
         return response()->json(Auth::user());
     }
