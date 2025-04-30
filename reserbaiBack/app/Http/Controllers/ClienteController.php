@@ -11,7 +11,9 @@ class ClienteController extends Controller
 {
     public function index()
     {
-        return response()->json(Auth::user());
+        $clientes = User::where('rol', 'cliente')->get();
+
+        return response()->json($clientes);
     }
 
     public function actualizar(Request $request)

@@ -11,17 +11,15 @@ use App\Http\Controllers\PersonalController;
 use App\Http\Controllers\ServicioController;
 use Illuminate\Http\Request;  // Asegúrate de importar la clase Request
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+Route::middleware('api')->post('/login', [AuthController::class, 'login']);
 
 
 // Rutas para Auth
 Route::post('/login', [AuthController::class, 'login']);
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
 Route::post('/register', [AuthController::class, 'register']);
 
 // Rutas para Citas

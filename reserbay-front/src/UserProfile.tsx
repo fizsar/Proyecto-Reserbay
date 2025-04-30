@@ -1,4 +1,4 @@
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const UserProfile = () => {
@@ -7,9 +7,9 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/user', {
+        const response = await axios.get('http://localhost:8000/clientes', {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`, // Asegúrate de incluir el token
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         });
         setUser(response.data);
@@ -25,11 +25,11 @@ const UserProfile = () => {
     <div>
       {user ? (
         <div>
-          <h1>Welcome, {user.nombre}</h1>
+          <h1>Bienvenido, {user.nombre}</h1>
           <p>Email: {user.email}</p>
         </div>
       ) : (
-        <p>Loading...</p>
+        <p>Cargando...</p>
       )}
     </div>
   );

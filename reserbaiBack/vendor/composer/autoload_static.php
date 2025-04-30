@@ -522,8 +522,12 @@ class ComposerStaticInit88970a0117c062eed55fa8728fc43833
 
     public static $classMap = array (
         'App\\Http\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/AuthController.php',
+        'App\\Http\\Controllers\\CitaController' => __DIR__ . '/../..' . '/app/Http/Controllers/CitaController.php',
         'App\\Http\\Controllers\\ClienteController' => __DIR__ . '/../..' . '/app/Http/Controllers/ClienteController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
+        'App\\Http\\Controllers\\HorarioController' => __DIR__ . '/../..' . '/app/Http/Controllers/HorarioController.php',
+        'App\\Http\\Controllers\\PersonalController' => __DIR__ . '/../..' . '/app/Http/Controllers/PersonalController.php',
+        'App\\Http\\Controllers\\ServicioController' => __DIR__ . '/../..' . '/app/Http/Controllers/ServicioController.php',
         'App\\Models\\Cita' => __DIR__ . '/../..' . '/app/Models/Cita.php',
         'App\\Models\\Horario' => __DIR__ . '/../..' . '/app/Models/Horario.php',
         'App\\Models\\Servicio' => __DIR__ . '/../..' . '/app/Models/Servicio.php',

@@ -1,29 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  // Obtener lista de usuarios al cargar el componente
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get('http://127.0.0.1:8000/horarios'); // Asegúrate de tener esta ruta en el backend
-        console.log('Usuarios disponibles para login:', response.data);
-      } catch (error) {
-        console.error('Error al obtener los usuarios:', error);
-      }
-    };
-
-    fetchUsers();
+    // Obtener el CSRF token de Laravel
+    axios.get('http://localhost:8000/csrf-token')
+      .then(response => {
+        // Configurar Axios para enviar el token CSRF
+        axios.defaults.headers.common['X-CSRF-TOKEN'] = response.data.csrf_token;
+      })
+      .catch(error => {
+        console.error('Error al obtener el CSRF token:', error);
+      });
   }, []);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
     try {
-      const response = await axios.post('http://localhost:8000/api/login', { email, password });
-      localStorage.setItem('token', response.data.token);
+      const response = await axios.post('http://localhost:8000/login', { email, password });
+
+      const token = response.data.token;
+      localStorage.setItem('token', token);
+
       alert('Login correcto');
     } catch (error) {
       console.error('Error en login:', error);

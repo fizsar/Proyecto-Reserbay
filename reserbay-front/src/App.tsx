@@ -1,6 +1,6 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Login from './Login';  // Asegúrate de tener un componente Login
-import UserProfile from './UserProfile';  // Asegúrate de tener un componente UserProfile
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from './Login';
+import UserProfile from './UserProfile';
 
 function App() {
   return (
@@ -14,4 +14,3 @@ function App() {
 }
 
 export default App;
-
