@@ -17,11 +17,14 @@ require __DIR__.'/../vendor/autoload.php';
 /** @var Application $app */
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
-// Handle the request...
-$response = $app->handle(Request::capture());
+// Captura y guarda la solicitud
+$request = Request::capture();
 
-// Send the response to the browser...
+// Maneja la solicitud
+$response = $app->handle($request);
+
+// Envía la respuesta al navegador
 $response->send();
 
-// Terminate the application...
+// Termina la aplicación limpiamente
 $app->terminate($request, $response);
