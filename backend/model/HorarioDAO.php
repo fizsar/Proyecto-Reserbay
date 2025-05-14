@@ -36,4 +36,16 @@ class HorarioDAO {
         $stm = $this->pdo->prepare("DELETE FROM horarios WHERE id = ?");
         $stm->execute([$id]);
     }
+
+    public function actualizar(Horario $horario) {
+    $sql = "UPDATE horarios SET user_id = ?, dia_semana = ?, hora_inicio = ?, hora_fin = ? WHERE id = ?";
+    $this->pdo->prepare($sql)->execute([
+        $horario->getUserId(),
+        $horario->getDiaSemana(),
+        $horario->getHoraInicio(),
+        $horario->getHoraFin(),
+        $horario->getId()
+    ]);
+}
+
 }

@@ -1,13 +1,17 @@
 <?php
 
 require_once '../bd/database.php';
-require_once '../model/Cita.php';
+require_once '../model/entidades/Cita.php';
 
 class CitaDAO {
     private $pdo;
 
     public function __construct() {
-        $this->pdo = Database::connect();
+        try{
+        $this->pdo = Database::connect();}
+        catch (Exception $ex) {
+            die($ex->getMessage());
+        }
     }
 
     public function listar() {
@@ -62,5 +66,20 @@ class CitaDAO {
         die($e->getMessage());
     }
 }
+
+    public function listarPorUsuario($userId) {
+    $sql = "SELECT c.id, s.nombre AS servicio, c.fecha, c.hora, c.estado
+            FROM citas c
+            INNER JOIN servicios s ON c.servicio_id = s.id
+            WHERE c.user_id = ?";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute([$userId]);
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Si no hay resultados, devuelve un array vacío
+    return $result ?: [];
+}
+
+
 
 }
