@@ -18,7 +18,7 @@ class UserDAO {
         try {
             $stm = $this->pdo->prepare("SELECT * FROM users");
             $stm->execute();
-            return $stm->fetchAll(PDO::FETCH_CLASS, "User");
+            return $stm->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $ex) {
             die($ex->getMessage());
         }
@@ -89,5 +89,16 @@ class UserDAO {
 
     return null;
 }
+
+    public function listarEmpleados() {
+    try {
+        $stm = $this->pdo->prepare("SELECT id, nombre FROM users WHERE rol = 'personal'");
+        $stm->execute();
+        return $stm->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        die($e->getMessage());
+    }
+}
+
 
 }

@@ -1,7 +1,7 @@
 <?php
 
 require_once '../bd/database.php';
-require_once '../model/Horario.php';
+require_once '../model/entidades/Horario.php';
 
 class HorarioDAO {
     private $pdo;
@@ -47,5 +47,14 @@ class HorarioDAO {
         $horario->getId()
     ]);
 }
+
+    public function obtenerPorEmpleadoYDia($empleadoId, $diaSemana) {
+    $sql = "SELECT hora_inicio, hora_fin FROM horarios 
+            WHERE user_id = ? AND dia_semana = ?";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute([$empleadoId, $diaSemana]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
 }

@@ -8,5 +8,9 @@ export default [
     {
         path: "/dashboardCliente",
         file: "routes/DashboardCliente.tsx",
+    },
+    {
+        path: "/reservar",
+        file: "routes/ReservarCita.tsx"
     }
 ] satisfies RouteConfig;

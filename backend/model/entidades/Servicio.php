@@ -1,10 +1,13 @@
 <?php
 class Servicio {
-    private $id;
-    private $nombre;
-    private $duracion;
-    private $precio;
+    public $id;
+    public $nombre;
+    public $duracion;
+    public $precio;
+    public $created_at;  // ✅ necesario para que PDO no lance warning
+    public $updated_at;  // ✅ necesario también
 
+    // Métodos getter y setter opcionales
     public function getId() { return $this->id; }
     public function setId($id) { $this->id = $id; }
 
@@ -17,3 +20,4 @@ class Servicio {
     public function getPrecio() { return $this->precio; }
     public function setPrecio($precio) { $this->precio = $precio; }
 }
+

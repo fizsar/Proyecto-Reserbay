@@ -1,12 +1,13 @@
 <?php
 
-class User
-{
+class User {
     private $id;
     private $email;
     private $password;
     private $nombre;
     private $rol;
+    private $created_at;
+    private $updated_at;
 
     // Getters y Setters
     public function getId() { return $this->id; }
@@ -23,4 +24,10 @@ class User
 
     public function getRol() { return $this->rol; }
     public function setRol($rol) { $this->rol = $rol; }
+
+    public function getCreatedAt() { return $this->created_at; }
+    public function setCreatedAt($created_at) { $this->created_at = $created_at; }
+
+    public function getUpdatedAt() { return $this->updated_at; }
+    public function setUpdatedAt($updated_at) { $this->updated_at = $updated_at; }
 }

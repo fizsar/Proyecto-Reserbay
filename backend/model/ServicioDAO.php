@@ -1,7 +1,7 @@
 <?php
 
 require_once '../bd/database.php';
-require_once '../model/Servicio.php';
+require_once '../model/entidades/Servicio.php';
 
 class ServicioDAO {
     private $pdo;

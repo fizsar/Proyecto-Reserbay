@@ -1,4 +1,19 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+// CORS headers
+header("Access-Control-Allow-Origin: http://localhost:5173");
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+
+// Manejar preflight
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
 require_once '../model/HorarioDAO.php';
 require_once '../model/entidades/Horario.php';
 
@@ -37,4 +52,15 @@ class HorarioController {
         $horario = $this->model->obtener($_REQUEST['id']);
         echo json_encode($horario);
     }
+    public function obtenerPorEmpleadoYDia() {
+    $empleadoId = $_GET['empleado_id'];
+    $diaSemana = $_GET['dia_semana'];
+    $horarios = $this->model->obtenerPorEmpleadoYDia($empleadoId, $diaSemana);
+    echo json_encode($horarios);
+}
+
+}
+if ($action === 'obtenerPorEmpleadoYDia') {
+    $controller->obtenerPorEmpleadoYDia();
+    exit();
 }

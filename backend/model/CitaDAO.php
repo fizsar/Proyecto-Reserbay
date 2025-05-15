@@ -80,6 +80,47 @@ class CitaDAO {
     return $result ?: [];
 }
 
+public function estaDisponible($personalId, $fecha, $hora) {
+    $sql = "SELECT COUNT(*) FROM citas 
+            WHERE personal_id = ? 
+              AND fecha = ? 
+              AND hora = ? 
+              AND estado != 'cancelada'";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute([$personalId, $fecha, $hora]);
+    return $stmt->fetchColumn() == 0; // true si está disponible
+}
+
+    public function obtenerHorasReservadas($empleadoId, $fecha) {
+    $sql = "SELECT hora FROM citas 
+            WHERE personal_id = ? AND fecha = ?";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute([$empleadoId, $fecha]);
+    return $stmt->fetchAll(PDO::FETCH_COLUMN);
+}
+
+public function getHorasDisponibles($personal_id, $fecha) {
+    $stmt = $this->pdo->prepare("SELECT hora_inicio, hora_fin FROM horarios WHERE user_id = ? AND fecha = ?");
+    $stmt->execute([$personal_id, $fecha]);
+    $horario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$horario) {
+        return []; // No hay disponibilidad ese día
+    }
+
+    $horaInicio = new DateTime($horario['hora_inicio']);
+    $horaFin = new DateTime($horario['hora_fin']);
+    $intervalo = new DateInterval('PT1H');
+    $periodo = new DatePeriod($horaInicio, $intervalo, $horaFin);
+
+    $horas = [];
+    foreach ($periodo as $hora) {
+        $horas[] = $hora->format('H:i');
+    }
+
+    $ocupadas = $this->obtenerHorasReservadas($personal_id, $fecha);
+    return array_values(array_filter($horas, fn($h) => !in_array($h, $ocupadas)));
+}
 
 
 }
