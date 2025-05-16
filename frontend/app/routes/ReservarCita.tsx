@@ -223,7 +223,7 @@ const ReservaCita = () => {
                         }
                       `}
                     >
-                      {hora}
+                      {hora.slice(0, 5)}
                     </button>
                   ))}
                 </div>

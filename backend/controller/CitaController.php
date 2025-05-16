@@ -67,11 +67,21 @@ class CitaController {
     }
 
     public function cambiarEstado() {
-        $id = $_REQUEST['id'];
-        $estado = $_REQUEST['estado'];
-        $this->model->actualizarEstado($id, $estado);
-        echo json_encode(["status" => "updated"]);
+    // Lee datos JSON del body
+    $input = json_decode(file_get_contents('php://input'), true);
+
+    $id = $input['id'] ?? null;
+    $estado = $input['estado'] ?? null;
+
+    if (!$id || !$estado) {
+        http_response_code(400);
+        echo json_encode(['status' => 'error', 'message' => 'Parámetros faltantes']);
+        return;
     }
+
+    $this->model->actualizarEstado($id, $estado);
+    echo json_encode(['status' => 'updated']);
+}
 
     public function obtener() {
         $cita = $this->model->obtener($_REQUEST['id']);
@@ -113,6 +123,20 @@ class CitaController {
         $horas = $this->model->getHorasDisponibles($personal_id, $fecha);
         echo json_encode($horas);
     }
+     public function getByEmpleado() {
+        session_start();
+        if (!isset($_SESSION['user_id']) || $_SESSION['rol'] !== 'personal') {
+            http_response_code(401);
+            echo json_encode(['status' => 'error', 'message' => 'No autorizado']);
+            return;
+        }
+
+        $empleadoId = $_SESSION['user_id'];
+        $citas = $this->model->listarPorEmpleado($empleadoId);
+
+        echo json_encode($citas);
+    }
+
 }
 
 $controller = new CitaController();

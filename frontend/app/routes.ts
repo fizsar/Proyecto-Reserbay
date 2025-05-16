@@ -16,5 +16,9 @@ export default [
     {
         path: "/logout",
         file: "routes/Logout.tsx"
-    }
+    },
+    {
+        path: "/dashboardEmpleado",
+        file: "routes/DashboardEmpleado.tsx",
+    },
 ] satisfies RouteConfig;

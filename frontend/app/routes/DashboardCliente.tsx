@@ -7,14 +7,15 @@ interface Cita {
   fecha: string;
   hora: string;
   estado: string;
-  precio: number | string;
+  precio: number;
   empleado: string;
 }
 
 const DashboardCliente = () => {
   const [nombre, setNombre] = useState('');
   const [rol, setRol] = useState<'cliente' | 'empleado'>('cliente');
-  const [citas, setCitas] = useState<Cita[]>([]);
+  const [citasFuturas, setCitasFuturas] = useState<Cita[]>([]);
+  const [citasPasadas, setCitasPasadas] = useState<Cita[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -41,13 +42,33 @@ const DashboardCliente = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        setCitas(data);
+        separarCitas(data);
         setLoading(false);
       })
       .catch((error) => {
         console.error('Error al obtener citas:', error);
         setLoading(false);
       });
+  };
+
+  const separarCitas = (citas: Cita[]) => {
+    const hoy = new Date();
+
+    const futuras: Cita[] = [];
+    const pasadas: Cita[] = [];
+
+    citas.forEach((cita) => {
+      const fechaHora = new Date(`${cita.fecha}T${cita.hora}`);
+
+      if (cita.estado.toLowerCase() === 'cancelada' || fechaHora < hoy) {
+        pasadas.push(cita);
+      } else {
+        futuras.push(cita);
+      }
+    });
+
+    setCitasFuturas(futuras);
+    setCitasPasadas(pasadas);
   };
 
   const eliminarCita = (id: number) => {
@@ -60,7 +81,7 @@ const DashboardCliente = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.status === 'deleted') {
-          setCitas((prev) => prev.filter((c) => c.id !== id));
+          setCitasFuturas((prev) => prev.filter((c) => c.id !== id));
         } else {
           alert('❌ Error al eliminar la cita.');
         }
@@ -96,6 +117,61 @@ const DashboardCliente = () => {
     }
   };
 
+  const renderCitas = (citas: Cita[], tipo: 'futuras' | 'pasadas') =>
+    citas.length === 0 ? (
+      <p className="text-center text-gray-500 dark:text-gray-400 italic mt-4">
+        No tienes citas {tipo === 'futuras' ? 'programadas' : 'pasadas'}.
+      </p>
+    ) : (
+      <div className="space-y-6">
+        {citas.map((cita) => (
+          <div
+            key={cita.id}
+            className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 flex justify-between items-center transition hover:shadow-xl"
+          >
+            <div>
+              <p className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                {cita.servicio}
+              </p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                <strong>Fecha:</strong> {cita.fecha}
+              </p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                <strong>Hora:</strong> {cita.hora}
+              </p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                <strong>Precio:</strong> ${parseFloat(cita.precio as any).toFixed(2)}
+              </p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                <strong>Empleado:</strong> {cita.empleado}
+              </p>
+            </div>
+
+            <div className="flex items-center space-x-4">
+              <span
+                className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold ${getEstadoColor(
+                  cita.estado
+                )}`}
+              >
+                <span className="mr-2 text-xl">{getEstadoIcono(cita.estado)}</span>
+                {cita.estado.charAt(0).toUpperCase() + cita.estado.slice(1)}
+              </span>
+
+              {tipo === 'futuras' && (
+                <button
+                  onClick={() => eliminarCita(cita.id)}
+                  className="text-red-600 hover:text-red-800 dark:hover:text-red-400 transition text-xl"
+                  title="Eliminar cita"
+                >
+                  🗑️
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+
   return (
     <>
       <Navbar rol={rol} />
@@ -105,76 +181,18 @@ const DashboardCliente = () => {
           ¡Hola, {nombre}!
         </h1>
 
-        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6">Tus citas agendadas:</h2>
-
         {loading ? (
-          <div className="flex justify-center items-center space-x-2 text-indigo-600 dark:text-indigo-400">
-            <svg
-              className="animate-spin h-6 w-6 mr-3 text-indigo-600 dark:text-indigo-400"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-              />
-            </svg>
-            <span className="text-lg font-medium">Cargando citas...</span>
+          <div className="text-center text-indigo-600 dark:text-indigo-400">
+            <p className="text-lg">Cargando citas...</p>
           </div>
-        ) : citas.length === 0 ? (
-          <p className="text-center text-gray-500 dark:text-gray-400 italic mt-8">
-            No tienes citas programadas.
-          </p>
         ) : (
-          <div className="space-y-6">
-            {citas.map((cita) => (
-              <div
-                key={cita.id}
-                className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 flex justify-between items-center transition hover:shadow-xl"
-              >
-                <div>
-                  <p className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">
-                    {cita.servicio}
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <strong>Fecha:</strong> {cita.fecha}
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <strong>Hora:</strong> {cita.hora}
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <strong>Precio:</strong> ${Number(cita.precio).toFixed(2)}
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <strong>Empleado:</strong> {cita.empleado}
-                  </p>
-                </div>
+          <>
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Citas futuras:</h2>
+            {renderCitas(citasFuturas, 'futuras')}
 
-                <div className="flex items-center space-x-4">
-                  <span
-                    className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold ${getEstadoColor(
-                      cita.estado
-                    )}`}
-                    title={`Estado: ${cita.estado}`}
-                  >
-                    <span className="mr-2 text-xl">{getEstadoIcono(cita.estado)}</span>
-                    {cita.estado.charAt(0).toUpperCase() + cita.estado.slice(1)}
-                  </span>
-
-                  <button
-                    onClick={() => eliminarCita(cita.id)}
-                    className="text-red-600 hover:text-red-800 dark:hover:text-red-400 transition text-xl"
-                    title="Eliminar cita"
-                  >
-                    🗑️
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mt-10 mb-4">Citas pasadas:</h2>
+            {renderCitas(citasPasadas, 'pasadas')}
+          </>
         )}
       </div>
     </>

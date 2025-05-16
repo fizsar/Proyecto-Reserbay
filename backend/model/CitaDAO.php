@@ -131,5 +131,23 @@ public function getHorasDisponibles($personal_id, $fecha) {
     return array_values(array_filter($horas, fn($h) => !in_array($h, $ocupadas)));
 }
 
+public function listarPorEmpleado($empleadoId) {
+    $stmt = $this->pdo->prepare("
+        SELECT 
+            c.id,
+            s.nombre AS servicio,
+            c.fecha,
+            c.hora,
+            c.estado,
+            u.nombre AS cliente
+        FROM citas c
+        INNER JOIN servicios s ON c.servicio_id = s.id
+        INNER JOIN users u ON c.user_id = u.id
+        WHERE c.personal_id = ?
+        ORDER BY c.fecha DESC, c.hora DESC
+    ");
+    $stmt->execute([$empleadoId]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
 }
