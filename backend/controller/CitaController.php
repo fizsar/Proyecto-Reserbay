@@ -79,18 +79,19 @@ class CitaController {
     }
 
     public function getByUser() {
-        session_start();
+    session_start();
 
-        if (!isset($_SESSION['user_id'])) {
-            http_response_code(401);
-            echo json_encode(["status" => "error", "message" => "No autenticado"]);
-            return;
-        }
-
-        $userId = $_SESSION['user_id'];
-        $citas = $this->model->listarPorUsuario($userId);
-        echo json_encode($citas);
+    if (!isset($_SESSION['user_id'])) {
+        http_response_code(401);
+        echo json_encode(["status" => "error", "message" => "No autenticado"]);
+        return;
     }
+
+    $userId = $_SESSION['user_id'];
+    $citas = $this->model->listarPorUsuario($userId);
+    echo json_encode($citas);
+}
+
 
     public function obtenerHorasOcupadas() {
         $empleadoId = $_GET['empleado_id'];

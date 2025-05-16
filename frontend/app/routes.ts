@@ -12,5 +12,9 @@ export default [
     {
         path: "/reservar",
         file: "routes/ReservarCita.tsx"
+    },
+    {
+        path: "/logout",
+        file: "routes/Logout.tsx"
     }
 ] satisfies RouteConfig;

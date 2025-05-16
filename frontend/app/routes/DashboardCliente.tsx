@@ -1,4 +1,3 @@
-// DashboardCliente.tsx
 import React, { useEffect, useState } from 'react';
 import Navbar from '../components/NavBar';
 
@@ -8,6 +7,8 @@ interface Cita {
   fecha: string;
   hora: string;
   estado: string;
+  precio: number | string;
+  empleado: string;
 }
 
 const DashboardCliente = () => {
@@ -46,6 +47,26 @@ const DashboardCliente = () => {
       .catch((error) => {
         console.error('Error al obtener citas:', error);
         setLoading(false);
+      });
+  };
+
+  const eliminarCita = (id: number) => {
+    if (!confirm('¿Estás seguro de que deseas eliminar esta cita?')) return;
+
+    fetch(`http://localhost:3000/backend/controller/CitaController.php?action=eliminar&id=${id}`, {
+      method: 'GET',
+      credentials: 'include',
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === 'deleted') {
+          setCitas((prev) => prev.filter((c) => c.id !== id));
+        } else {
+          alert('❌ Error al eliminar la cita.');
+        }
+      })
+      .catch(() => {
+        alert('❌ Error en la solicitud.');
       });
   };
 
@@ -94,14 +115,7 @@ const DashboardCliente = () => {
               fill="none"
               viewBox="0 0 24 24"
             >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              />
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path
                 className="opacity-75"
                 fill="currentColor"
@@ -131,17 +145,33 @@ const DashboardCliente = () => {
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     <strong>Hora:</strong> {cita.hora}
                   </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <strong>Precio:</strong> ${Number(cita.precio).toFixed(2)}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <strong>Empleado:</strong> {cita.empleado}
+                  </p>
                 </div>
 
-                <span
-                  className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold ${getEstadoColor(
-                    cita.estado
-                  )}`}
-                  title={`Estado: ${cita.estado}`}
-                >
-                  <span className="mr-2 text-xl">{getEstadoIcono(cita.estado)}</span>
-                  {cita.estado.charAt(0).toUpperCase() + cita.estado.slice(1)}
-                </span>
+                <div className="flex items-center space-x-4">
+                  <span
+                    className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold ${getEstadoColor(
+                      cita.estado
+                    )}`}
+                    title={`Estado: ${cita.estado}`}
+                  >
+                    <span className="mr-2 text-xl">{getEstadoIcono(cita.estado)}</span>
+                    {cita.estado.charAt(0).toUpperCase() + cita.estado.slice(1)}
+                  </span>
+
+                  <button
+                    onClick={() => eliminarCita(cita.id)}
+                    className="text-red-600 hover:text-red-800 dark:hover:text-red-400 transition text-xl"
+                    title="Eliminar cita"
+                  >
+                    🗑️
+                  </button>
+                </div>
               </div>
             ))}
           </div>

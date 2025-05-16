@@ -67,18 +67,27 @@ class CitaDAO {
     }
 }
 
-    public function listarPorUsuario($userId) {
-    $sql = "SELECT c.id, s.nombre AS servicio, c.fecha, c.hora, c.estado
-            FROM citas c
-            INNER JOIN servicios s ON c.servicio_id = s.id
-            WHERE c.user_id = ?";
-    $stmt = $this->pdo->prepare($sql);
+  public function listarPorUsuario($userId) {
+    $stmt = $this->pdo->prepare("
+        SELECT 
+            c.id,
+            s.nombre AS servicio,
+            s.precio,
+            c.fecha,
+            c.hora,
+            c.estado,
+            u.nombre AS empleado
+        FROM citas c
+        INNER JOIN servicios s ON c.servicio_id = s.id
+        INNER JOIN users u ON c.personal_id = u.id
+        WHERE c.user_id = ?
+        ORDER BY c.fecha DESC, c.hora DESC
+    ");
     $stmt->execute([$userId]);
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Si no hay resultados, devuelve un array vacío
-    return $result ?: [];
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+
 
 public function estaDisponible($personalId, $fecha, $hora) {
     $sql = "SELECT COUNT(*) FROM citas 
