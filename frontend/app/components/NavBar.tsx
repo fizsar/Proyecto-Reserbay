@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router';
 
-const Navbar = ({ rol }: { rol: 'cliente' | 'empleado' }) => {
+const Navbar = ({ rol }: { rol: 'cliente' | 'personal' }) => {
   const baseLinkStyle = "px-3 py-2 rounded transition";
   const activeStyle = "bg-white text-green-700 font-semibold";
   const hoverStyle = "hover:bg-white hover:text-green-700";
@@ -30,7 +30,7 @@ const Navbar = ({ rol }: { rol: 'cliente' | 'empleado' }) => {
             </NavLink>
           </>
         )}
-        {rol === 'empleado' && (
+        {rol === 'personal' && (
           <>
             <NavLink
               to="/dashboard-empleado"

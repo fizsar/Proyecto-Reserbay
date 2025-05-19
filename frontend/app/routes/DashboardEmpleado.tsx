@@ -12,7 +12,7 @@ interface Cita {
 
 const DashboardEmpleado = () => {
   const [nombre, setNombre] = useState('');
-  const [rol, setRol] = useState<'cliente' | 'empleado'>('empleado');
+  const [rol, setRol] = useState<'cliente' | 'personal'>('personal');
   const [citas, setCitas] = useState<Cita[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,7 +26,7 @@ const DashboardEmpleado = () => {
       .then(data => {
         if (data.status === 'active' && data.user.rol === 'personal') {
           setNombre(data.user.nombre);
-          setRol('empleado');
+          setRol('personal');
           fetchCitas();
         } else {
           window.location.href = '/';

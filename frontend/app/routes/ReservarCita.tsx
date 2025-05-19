@@ -14,7 +14,7 @@ interface Empleado {
 interface Usuario {
   id: number;
   nombre: string;
-  rol: 'cliente' | 'empleado';
+  rol: 'cliente' | 'personal';
 }
 
 const ReservaCita = () => {

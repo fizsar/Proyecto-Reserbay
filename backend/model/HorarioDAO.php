@@ -17,10 +17,10 @@ class HorarioDAO {
     }
 
     public function registrar(Horario $horario) {
-        $sql = "INSERT INTO horarios (user_id, dia_semana, hora_inicio, hora_fin) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO horarios (user_id, fecha, hora_inicio, hora_fin) VALUES (?, ?, ?, ?)";
         $this->pdo->prepare($sql)->execute([
             $horario->getUserId(),
-            $horario->getDiaSemana(),
+            $horario->getFecha(),
             $horario->getHoraInicio(),
             $horario->getHoraFin()
         ]);
@@ -38,23 +38,30 @@ class HorarioDAO {
     }
 
     public function actualizar(Horario $horario) {
-    $sql = "UPDATE horarios SET user_id = ?, dia_semana = ?, hora_inicio = ?, hora_fin = ? WHERE id = ?";
-    $this->pdo->prepare($sql)->execute([
-        $horario->getUserId(),
-        $horario->getDiaSemana(),
-        $horario->getHoraInicio(),
-        $horario->getHoraFin(),
-        $horario->getId()
-    ]);
-}
+        $sql = "UPDATE horarios SET user_id = ?, fecha = ?, hora_inicio = ?, hora_fin = ? WHERE id = ?";
+        $this->pdo->prepare($sql)->execute([
+            $horario->getUserId(),
+            $horario->getFecha(),
+            $horario->getHoraInicio(),
+            $horario->getHoraFin(),
+            $horario->getId()
+        ]);
+    }
 
-    public function obtenerPorEmpleadoYDia($empleadoId, $diaSemana) {
-    $sql = "SELECT hora_inicio, hora_fin FROM horarios 
-            WHERE user_id = ? AND dia_semana = ?";
+    public function obtenerPorEmpleadoYDia($empleadoId, $fecha) {
+        $sql = "SELECT hora_inicio, hora_fin FROM horarios 
+                WHERE user_id = ? AND fecha = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$empleadoId, $fecha]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function existeHorario($user_id, $fecha, $hora_inicio) {
+    $sql = "SELECT COUNT(*) FROM horarios WHERE user_id = ? AND fecha = ? AND hora_inicio = ?";
     $stmt = $this->pdo->prepare($sql);
-    $stmt->execute([$empleadoId, $diaSemana]);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt->execute([$user_id, $fecha, $hora_inicio]);
+    $count = $stmt->fetchColumn();
+    return $count > 0;
 }
-
 
 }

@@ -2,7 +2,7 @@
 class Horario {
     private $id;
     private $user_id;
-    private $dia_semana;
+    private $fecha;
     private $hora_inicio;
     private $hora_fin;
 
@@ -12,8 +12,8 @@ class Horario {
     public function getUserId() { return $this->user_id; }
     public function setUserId($user_id) { $this->user_id = $user_id; }
 
-    public function getDiaSemana() { return $this->dia_semana; }
-    public function setDiaSemana($dia_semana) { $this->dia_semana = $dia_semana; }
+    public function getFecha() { return $this->fecha; }
+    public function setFecha($fecha) { $this->fecha = $fecha; }
 
     public function getHoraInicio() { return $this->hora_inicio; }
     public function setHoraInicio($hora_inicio) { $this->hora_inicio = $hora_inicio; }
