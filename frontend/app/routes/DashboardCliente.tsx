@@ -53,13 +53,11 @@ const DashboardCliente = () => {
 
   const separarCitas = (citas: Cita[]) => {
     const hoy = new Date();
-
     const futuras: Cita[] = [];
     const pasadas: Cita[] = [];
 
     citas.forEach((cita) => {
       const fechaHora = new Date(`${cita.fecha}T${cita.hora}`);
-
       if (cita.estado.toLowerCase() === 'cancelada' || fechaHora < hoy) {
         pasadas.push(cita);
       } else {
@@ -123,11 +121,11 @@ const DashboardCliente = () => {
         No tienes citas {tipo === 'futuras' ? 'programadas' : 'pasadas'}.
       </p>
     ) : (
-      <div className="space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {citas.map((cita) => (
           <div
             key={cita.id}
-            className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 flex justify-between items-center transition hover:shadow-xl"
+            className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col justify-between transition hover:shadow-xl"
           >
             <div>
               <p className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">
@@ -147,9 +145,9 @@ const DashboardCliente = () => {
               </p>
             </div>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center justify-between mt-4">
               <span
-                className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold ${getEstadoColor(
+                className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${getEstadoColor(
                   cita.estado
                 )}`}
               >
@@ -175,7 +173,6 @@ const DashboardCliente = () => {
   return (
     <>
       <Navbar rol={rol} />
-
       <div className="pt-24 min-h-screen bg-gradient-to-br from-indigo-50 to-white dark:from-gray-900 dark:to-gray-800 p-8 transition-colors duration-500">
         <h1 className="text-3xl font-extrabold text-indigo-700 dark:text-indigo-400 mb-8 tracking-wide">
           ¡Hola, {nombre}!

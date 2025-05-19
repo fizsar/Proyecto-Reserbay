@@ -93,12 +93,12 @@ const DashboardEmpleado = () => {
         {loading ? (
           <p>Cargando citas...</p>
         ) : Array.isArray(citas) && citas.length > 0 ? (
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {citas.map(cita => (
               <div
                 key={cita.id}
                 className={`
-                  p-6 rounded-2xl shadow-lg border flex justify-between items-center transition hover:shadow-xl
+                  p-6 rounded-2xl shadow-lg border flex flex-col justify-between transition hover:shadow-xl
                   ${
                     cita.estado === 'aceptada'
                       ? 'bg-green-100 dark:bg-green-900 border-green-400 dark:border-green-700 text-green-900 dark:text-green-300'
@@ -119,7 +119,7 @@ const DashboardEmpleado = () => {
                 </div>
 
                 {cita.estado === 'pendiente' && (
-                  <div className="flex space-x-4">
+                  <div className="flex space-x-4 mt-4">
                     <button
                       onClick={() => actualizarEstado(cita.id, 'aceptada')}
                       className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
