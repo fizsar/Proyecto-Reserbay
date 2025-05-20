@@ -29,19 +29,67 @@ class UserController {
     }
 
     public function guardar() {
-        $user = new User();
-        $user->setId($_REQUEST['id'] ?? 0);
-        $user->setNombre($_REQUEST['nombre']);
-        $user->setEmail($_REQUEST['email']);
-        $user->setPassword(password_hash($_REQUEST['password'], PASSWORD_DEFAULT));
-        $user->setRol($_REQUEST['rol']);
+    // Leer JSON del cuerpo
+    $input = json_decode(file_get_contents("php://input"), true);
 
-        $user->getId() > 0 
-            ? $this->model->actualizar($user)
-            : $this->model->registrar($user);
-
-        echo json_encode(["status" => "success"]);
+    if (!$input) {
+        http_response_code(400);
+        echo json_encode(["error" => "Datos JSON inválidos"]);
+        exit();
     }
+
+    // Validar campos obligatorios
+    $required = ['nombre', 'email', 'password', 'rol'];
+    foreach ($required as $campo) {
+        if (empty($input[$campo])) {
+            http_response_code(400);
+            echo json_encode(["error" => "El campo '$campo' es obligatorio"]);
+            exit();
+        }
+    }
+
+    // Validar rol válido
+    if (!in_array($input['rol'], ['cliente', 'personal'])) {
+        http_response_code(400);
+        echo json_encode(["error" => "Rol inválido"]);
+        exit();
+    }
+
+    // Validar que email no esté registrado
+    $existente = $this->model->getByEmail($input['email']);
+    if ($existente && (!$input['id'] || $existente->getId() != $input['id'])) {
+        http_response_code(409);
+        echo json_encode(["error" => "El email ya está registrado"]);
+        exit();
+    }
+
+    $user = new User();
+    $user->setId($input['id'] ?? 0);
+    $user->setNombre($input['nombre']);
+    $user->setEmail($input['email']);
+    // Si viene id y password vacío no se actualiza la contraseña
+    if (!empty($input['password'])) {
+        $user->setPassword(password_hash($input['password'], PASSWORD_DEFAULT));
+    } else if ($user->getId() > 0) {
+        // En edición sin password, mantener actual
+        $userActual = $this->model->obtener($user->getId());
+        $user->setPassword($userActual->getPassword());
+    } else {
+        http_response_code(400);
+        echo json_encode(["error" => "La contraseña es obligatoria"]);
+        exit();
+    }
+    $user->setRol($input['rol']);
+
+    if ($user->getId() > 0) {
+        $this->model->actualizar($user);
+    } else {
+        $this->model->registrar($user);
+    }
+
+    echo json_encode(["status" => "success"]);
+}
+
 
     public function eliminar() {
         $this->model->eliminar($_REQUEST['id']);
