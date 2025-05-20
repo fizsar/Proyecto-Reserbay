@@ -25,4 +25,8 @@ export default [
         path: "/agenda",
         file: "routes/DisponibilidadEmpleado.tsx",
     },
+    {
+        path: "/AltaEmpleado",
+        file: "routes/AltaEmpleado.tsx",
+    },
 ] satisfies RouteConfig;

@@ -33,7 +33,7 @@ const Navbar = ({ rol }: { rol: 'cliente' | 'personal' }) => {
         {rol === 'personal' && (
           <>
             <NavLink
-              to="/dashboard-empleado"
+              to="/dashboardEmpleado"
               className={({ isActive }) =>
                 `${baseLinkStyle} ${isActive ? activeStyle : hoverStyle}`
               }
@@ -47,6 +47,14 @@ const Navbar = ({ rol }: { rol: 'cliente' | 'personal' }) => {
               }
             >
               Agenda
+            </NavLink>
+             <NavLink
+              to="/AltaEmpleado"
+              className={({ isActive }) =>
+                `${baseLinkStyle} ${isActive ? activeStyle : hoverStyle}`
+              }
+            >
+              Alta Empleado
             </NavLink>
           </>
         )}
