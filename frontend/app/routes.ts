@@ -29,4 +29,8 @@ export default [
         path: "/AltaEmpleado",
         file: "routes/AltaEmpleado.tsx",
     },
+    {
+        path: "/AltaCliente",
+        file: "routes/AltaCliente.tsx",
+    },
 ] satisfies RouteConfig;

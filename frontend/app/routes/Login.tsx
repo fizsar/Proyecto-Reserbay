@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
+import Navbar from '~/components/NavBar';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -41,6 +42,7 @@ const Login = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-[#121212] px-4">
+      <Navbar />
       <div className="w-full max-w-md bg-white dark:bg-[#1e1e1e] rounded-xl shadow-md p-8 space-y-6 border border-gray-200 dark:border-gray-700">
         <h2 className="text-2xl font-semibold text-[#1E7E34] dark:text-[#1DE91D] text-center">Iniciar sesión</h2>
 
@@ -78,6 +80,15 @@ const Login = () => {
             Iniciar sesión
           </button>
         </form>
+
+        {/* Aquí el botón para ir a registro */}
+        <button
+          onClick={() => navigate('/altacliente')}
+          className="w-full mt-4 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200 py-2 px-4 rounded-md hover:bg-gray-400 dark:hover:bg-gray-600 transition-all"
+          type="button"
+        >
+          ¿No tienes cuenta? Regístrate aquí
+        </button>
       </div>
     </div>
   );
