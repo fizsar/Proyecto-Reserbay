@@ -33,4 +33,8 @@ export default [
         path: "/AltaCliente",
         file: "routes/AltaCliente.tsx",
     },
+    {
+        path: "/NuevoServicio",
+        file: "routes/NuevoServicio.tsx",
+    }
 ] satisfies RouteConfig;

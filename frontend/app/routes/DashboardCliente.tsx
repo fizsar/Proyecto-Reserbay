@@ -13,7 +13,7 @@ interface Cita {
 
 const DashboardCliente = () => {
   const [nombre, setNombre] = useState('');
-  const [rol, setRol] = useState<'cliente' | 'empleado'>('cliente');
+  const [rol, setRol] = useState<'cliente' | 'personal'>('cliente');
   const [citasFuturas, setCitasFuturas] = useState<Cita[]>([]);
   const [citasPasadas, setCitasPasadas] = useState<Cita[]>([]);
   const [loading, setLoading] = useState(true);
@@ -138,7 +138,7 @@ const DashboardCliente = () => {
                 <strong>Hora:</strong> {cita.hora}
               </p>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                <strong>Precio:</strong> ${parseFloat(cita.precio as any).toFixed(2)}
+                <strong>Precio:</strong> {parseFloat(cita.precio as any).toFixed(2)}€
               </p>
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 <strong>Empleado:</strong> {cita.empleado}
